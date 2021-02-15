@@ -125,7 +125,7 @@ if __name__ == "__main__":
         author_email="ray-dev@googlegroups.com",
         description=("A python binding for gloo"),
         long_description=io.open(
-            os.path.join(ROOT_DIR, os.path.pardir, "README.md"),
+            os.path.join(ROOT_DIR, "README.md"),
             "r",
             encoding="utf-8").read(),
         url="https://github.com/ray-project/pygloo",
