@@ -73,9 +73,10 @@ http_archive(
 http_archive(
    name = "gloo",
    build_file_content = all_content,
-   strip_prefix = "gloo-be8fd671006968d4c39b84fe9c3f8cd4af2e51a2",
-   urls = ["https://github.com/Ezra-H/gloo/archive/be8fd671006968d4c39b84fe9c3f8cd4af2e51a2.tar.gz"],
-   # c1191d67288f5262577a336a23c546840361d857 activate hiredis/hiredis.h
+   strip_prefix = "gloo-add3f38c6a2715e9387f4966b4fc3d92bb786adb",
+   urls = ["https://github.com/Ezra-H/gloo/archive/add3f38c6a2715e9387f4966b4fc3d92bb786adb.tar.gz"],
+   # add3f38c6a2715e9387f4966b4fc3d92bb786adb remove libuv pkg_search, redis macro added. build find with hiredis
+   # c1191d67288f5262577a336a23c546840361d857 activate hiredis/hiredis.h not work with hiredis
    # be8fd671006968d4c39b84fe9c3f8cd4af2e51a2 remove libuv pkg_search command
    # 4279d78bcc7b04e975f94840a6ef30b086a8b6fe worked
 )

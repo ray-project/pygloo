@@ -7,25 +7,22 @@ cmake_external(
     name = "libuv",
     # Values to be passed as -Dkey=value on the CMake command line;
     # here are serving to provide some CMake script configuration options
-    cache_entries = {},
+    env_vars = {"CFLAGS": "-fPIC"},
     lib_source = "@libuv//:all",
 
     # We are selecting the resulting static library to be passed in C/C++ provider
     # as the result of the build;
-    # However, the cmake_external dependants could use other artefacts provided by the build,
-    # according to their CMake script
     static_libraries = ["libuv_a.a"],
 )
 
 make(
     name = "hiredis",
 
-    cache_entries = {},
+    out_include_dir =  "include/hiredis",
+
     lib_source = "@hiredis//:all",
     # We are selecting the resulting static library to be passed in C/C++ provider
     # as the result of the build;
-    # However, the cmake_external dependants could use other artefacts provided by the build,
-    # according to their CMake script
     static_libraries = ["libhiredis.a"],
 )
 
@@ -34,26 +31,24 @@ cmake_external(
     # Values to be passed as -Dkey=value on the CMake command line;
     # here are serving to provide some CMake script configuration options
     cache_entries = {
-        "PKG_CONFIG_PATH": "$EXT_BUILD_ROOT/bazel-out/host/bin/pygloo/copy_libuv/libuv/lib/pkgconfig:$EXT_BUILD_ROOT/bazel-out/host/bin/pygloo/copy_hiredis/hiredis/lib/pkgconfig:$PKG_CONFIG_PATH",
+        "PKG_CONFIG_PATH": "$EXT_BUILD_ROOT/bazel-out/host/bin/pygloo/copy_libuv/libuv/lib/pkgconfig:$EXT_BUILD_ROOT/bazel-out/host/bin/pygloo/copy_hiredis/hiredis/lib/pkgconfig:$PKG_CONFIG_PATH", # maybe useless
 
-        "libuv_LIBDIR": "$EXT_BUILD_ROOT/bazel-out/host/bin/pygloo/libuv/lib",
-        "libuv_INCLUDE_DIRS": "$EXT_BUILD_ROOT/bazel-out/host/bin/pygloo/libuv/include",
-        "libuv_LIBRARY": "$EXT_BUILD_ROOT/bazel-out/host/bin/pygloo/copy_hiredis/lib/libuv_a.a",
+        "libuv_LIBDIR": "$EXT_BUILD_DEPS/libuv/lib",
+        "libuv_INCLUDE_DIRS": "$EXT_BUILD_DEPS/libuv/include",
+        "libuv_LIBRARY": "$EXT_BUILD_DEPS/libuv/lib/libuv_a.a",
 
-        "HIREDIS_INCLUDE_DIRS": "$EXT_BUILD_ROOT/bazel-out/host/bin/pygloo/copy_hiredis/hiredis/include",
-        "HIREDIS_LIBRARIES": "$EXT_BUILD_ROOT/bazel-out/host/bin/pygloo/copy_hiredis/hiredis/lib",
+        "HIREDIS_NESTED_INCLUDE": "off", # 'on' use hiredis/hiredis.h, 'off' use hiredis.h. Both not work
+        "HIREDIS_ROOT_DIR":"$EXT_BUILD_DEPS/hiredis",
+        "HIREDIS_INCLUDE_DIR": "$EXT_BUILD_DEPS/hiredis/include/hiredis",
+        "HIREDIS_LIB_DIR": "$EXT_BUILD_DEPS/hiredis/lib",
 
         "USE_REDIS": "on",
         "USE_IBVERBS": "on",
         "USE_NCCL": "on",
         "USE_RCCL": "on",
-        "USE_LIBUV": "off",
+        "USE_LIBUV": "on",
         "USE_TCP_OPENSSL": "off",
     },
-    # tools_deps = [
-    #     ":libuv",
-    #     ":hiredis",
-    # ],
 
     deps = [
         ":libuv",
@@ -64,8 +59,6 @@ cmake_external(
 
     # We are selecting the resulting static library to be passed in C/C++ provider
     # as the result of the build;
-    # However, the cmake_external dependants could use other artefacts provided by the build,
-    # according to their CMake script
     static_libraries = ["libgloo.a"],
 )
 
@@ -74,7 +67,6 @@ pybind_library(
     srcs = glob(["src/*.cc"]),
     hdrs = glob(["include/*.h"]),
     strip_include_prefix = "include",
-    # copts = ["-Iinclude"],
     visibility = ["//visibility:public"],
     deps = [":gloo"]
 )

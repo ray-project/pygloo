@@ -57,11 +57,35 @@ void def_transport_tcp_module(pybind11::module &m) {
 #endif
 
 #if GLOO_HAVE_TRANSPORT_UV
-
-
 void def_transport_uv_module(pybind11::module &m) {
   pybind11::module uv = m.def_submodule("uv", "This is a uv module");
+
   uv.def("CreateDevice", &gloo::transport::uv::CreateDevice, "CreateDevice");
+
+  pybind11::class_<gloo::transport::uv::attr>(uv, "attr")
+      .def(pybind11::init<>())
+      .def(pybind11::init<const char *>())
+      .def_readwrite("hostname", &gloo::transport::uv::attr::hostname)
+      .def_readwrite("iface", &gloo::transport::uv::attr::iface)
+      .def_readwrite("ai_family", &gloo::transport::uv::attr::ai_family)
+      .def_readwrite("ai_socktype", &gloo::transport::uv::attr::ai_socktype)
+      .def_readwrite("ai_protocol", &gloo::transport::uv::attr::ai_protocol)
+      .def_readwrite("ai_addr", &gloo::transport::uv::attr::ai_addr)
+      .def_readwrite("ai_addrlen", &gloo::transport::uv::attr::ai_addrlen);
+
+  pybind11::class_<gloo::transport::uv::Context,
+                   std::shared_ptr<gloo::transport::uv::Context>>(uv,
+                                                                   "Context")
+      .def(pybind11::init<std::shared_ptr<gloo::transport::uv::Device>, int,
+                          int>())
+      // .def("createPair", &gloo::transport::uv::Context::createPair)
+      .def("createUnboundBuffer",
+           &gloo::transport::uv::Context::createUnboundBuffer);
+
+  pybind11::class_<gloo::transport::uv::Device,
+                  std::shared_ptr<gloo::transport::uv::Device>,
+                  gloo::transport::Device>(uv, "Device")
+    .def(pybind11::init<const struct gloo::transport::uv::attr &>());
 }
 #else
 void def_transport_uv_module(pybind11::module &m) {

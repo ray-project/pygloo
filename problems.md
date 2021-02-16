@@ -20,3 +20,4 @@
 
 - add hiredis dependence
   - can't find `hiredis.h` when compiling gloo.
+  - `hiredis/hiredis.h` and `hiredis.h` dont work
