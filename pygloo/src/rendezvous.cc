@@ -1,3 +1,4 @@
+#include <rendezvous.h>
 #include <gloo/config.h>
 
 #include <gloo/rendezvous/context.h>
@@ -5,20 +6,21 @@
 #include <gloo/rendezvous/hash_store.h>
 #include <gloo/rendezvous/prefix_store.h>
 
+// #include "gloo/common/error.h"
+// #include "gloo/common/logging.h"
+// #include "gloo/common/string.h"
+
 #if GLOO_USE_REDIS
 #include <gloo/rendezvous/redis_store.h>
 #endif
-
-#include <rendezvous.h>
-
+#include <iostream>
 namespace pygloo {
 namespace rendezvous {
 
 void def_rendezvous_module(pybind11::module &m) {
   pybind11::module rendezvous =
       m.def_submodule("rendezvous", "This is a rendezvous module");
-  // pybind11::class_<gloo::rendezvous::Context, gloo::Context>(rendezvous,
-  // "Context")
+
   pybind11::class_<gloo::rendezvous::Context, gloo::Context,
                    std::shared_ptr<gloo::rendezvous::Context>>(rendezvous,
                                                                "Context")
@@ -54,12 +56,48 @@ void def_rendezvous_module(pybind11::module &m) {
       .def("get", &gloo::rendezvous::PrefixStore::get);
 
 #if GLOO_USE_REDIS
+  class RedisStoreWithAuth : public gloo::rendezvous::RedisStore {
+  public:
+      RedisStoreWithAuth(const std::string& host, int port):
+        gloo::rendezvous::RedisStore(host, port){};
+      using gloo::rendezvous::RedisStore::set;
+      using gloo::rendezvous::RedisStore::get;
+      using gloo::rendezvous::RedisStore::check;
+      using gloo::rendezvous::RedisStore::wait;
+      using gloo::rendezvous::RedisStore::redis_;
+
+      void authorize (std::string redis_password){
+        void *ptr = (redisReply *)redisCommand(
+            redis_, "auth %b", redis_password.c_str(), (size_t)redis_password.size());
+
+        if (ptr == nullptr) {
+            GLOO_THROW_IO_EXCEPTION(redis_->errstr);
+        }
+        redisReply* reply = static_cast<redisReply*>(ptr);
+        if (reply->type == REDIS_REPLY_ERROR) {
+            GLOO_THROW_IO_EXCEPTION("Error: ", reply->str);
+        }
+        freeReplyObject(reply);
+      }
+  };
+
   pybind11::class_<gloo::rendezvous::RedisStore, gloo::rendezvous::Store,
-                   std::shared_ptr<gloo::rendezvous::RedisStore>>(rendezvous,
-                                                                  "RedisStore")
+                   std::shared_ptr<gloo::rendezvous::RedisStore>>
+                   (rendezvous, "_RedisStore")
       .def(pybind11::init<const std::string &, int>())
       .def("set", &gloo::rendezvous::RedisStore::set)
       .def("get", &gloo::rendezvous::RedisStore::get);
+
+  pybind11::class_<RedisStoreWithAuth, // gloo::rendezvous::RedisStore,
+                   gloo::rendezvous::Store,
+                   std::shared_ptr<RedisStoreWithAuth>
+                   >
+                   (rendezvous, "RedisStore")
+      .def(pybind11::init<const std::string &, int>())
+      .def("set", &RedisStoreWithAuth::set)
+      .def("get", &RedisStoreWithAuth::get)
+      .def("authorize", &RedisStoreWithAuth::authorize);
+
 #endif
 }
 } // namespace rendezvous

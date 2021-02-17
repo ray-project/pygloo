@@ -1,7 +1,7 @@
 #include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl_bind.h>
-
+#include <gloo/config.h>
 #if GLOO_HAVE_TRANSPORT_TCP
 
 #include <gloo/transport/tcp/address.h>
@@ -23,6 +23,16 @@
 #include <gloo/transport/uv/pair.h>
 #include <gloo/transport/uv/unbound_buffer.h>
 
+#endif
+
+#if !GLOO_HAVE_TRANSPORT_UV
+#if !GLOO_HAVE_TRANSPORT_UV
+#include <gloo/transport/address.h>
+#include <gloo/transport/context.h>
+#include <gloo/transport/device.h>
+#include <gloo/transport/pair.h>
+#include <gloo/transport/unbound_buffer.h>
+#endif
 #endif
 
 

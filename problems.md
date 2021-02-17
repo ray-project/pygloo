@@ -14,10 +14,3 @@
         (pid=5478)           [0. 4. 6.]]
 
 - The differences between `broadcast` and `bcast`.
-
-- add libuv dependence
-  - appear `undefined symbol: uv_is_closing` when `import pygloo`.
-
-- add hiredis dependence
-  - can't find `hiredis.h` when compiling gloo.
-  - `hiredis/hiredis.h` and `hiredis.h` dont work

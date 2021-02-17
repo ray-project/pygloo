@@ -1,5 +1,4 @@
 #include <chrono>
-#include <gloo/config.h>
 #include <transport.h>
 
 namespace pygloo {
