@@ -53,12 +53,28 @@ http_archive(
    urls = ["https://github.com/pybind/pybind11/archive/v2.6.1.tar.gz"],
 )
 
+http_archive(
+   name = "libuv",
+   build_file_content = all_content,
+   strip_prefix = "libuv-1.40.0",
+   urls = ["https://github.com/libuv/libuv/archive/v1.40.0.tar.gz"],
+   sha256 = "70fe1c9ba4f2c509e8166c0ca2351000237da573bb6c82092339207a9715ba6b",
+)
+
+http_archive(
+   name = "hiredis",
+   build_file_content = all_content,
+   strip_prefix = "hiredis-1.0.0",
+   urls = ["https://github.com/redis/hiredis/archive/v1.0.0.tar.gz"],
+   sha256 = "2a0b5fe5119ec973a0c1966bfc4bd7ed39dbce1cb6d749064af9121fe971936f",
+)
+
 # gloo source code repository
 http_archive(
    name = "gloo",
    build_file_content = all_content,
-   strip_prefix = "gloo-be8fd671006968d4c39b84fe9c3f8cd4af2e51a2",
-   urls = ["https://github.com/Ezra-H/gloo/archive/be8fd671006968d4c39b84fe9c3f8cd4af2e51a2.tar.gz"],
+   strip_prefix = "gloo-add3f38c6a2715e9387f4966b4fc3d92bb786adb",
+   urls = ["https://github.com/Ezra-H/gloo/archive/add3f38c6a2715e9387f4966b4fc3d92bb786adb.tar.gz"],
 )
 
 load("@pybind11_bazel//:python_configure.bzl", "python_configure_pybind")
