@@ -92,6 +92,5 @@ public:
 void def_transport_module(pybind11::module &m);
 void def_transport_tcp_module(pybind11::module &m);
 void def_transport_uv_module(pybind11::module &m);
-
 } // namespace transport
 } // namespace pygloo

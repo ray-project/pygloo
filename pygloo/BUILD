@@ -36,7 +36,7 @@ cmake_external(
         "libuv_INCLUDE_DIRS": "$EXT_BUILD_DEPS/libuv/include",
         "libuv_LIBRARY": "$EXT_BUILD_DEPS/libuv/lib/libuv_a.a",
 
-        "HIREDIS_NESTED_INCLUDE": "off", # 'on' use hiredis/hiredis.h, 'off' use hiredis.h. Both not work
+        "HIREDIS_NESTED_INCLUDE": "off", # 'on' use hiredis/hiredis.h, 'off' use hiredis.h.
         "HIREDIS_ROOT_DIR":"$EXT_BUILD_DEPS/hiredis",
         "HIREDIS_INCLUDE_DIR": "$EXT_BUILD_DEPS/hiredis/include/hiredis",
         "HIREDIS_LIB_DIR": "$EXT_BUILD_DEPS/hiredis/lib",

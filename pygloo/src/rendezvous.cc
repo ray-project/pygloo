@@ -6,14 +6,11 @@
 #include <gloo/rendezvous/hash_store.h>
 #include <gloo/rendezvous/prefix_store.h>
 
-// #include "gloo/common/error.h"
-// #include "gloo/common/logging.h"
-// #include "gloo/common/string.h"
 
 #if GLOO_USE_REDIS
 #include <gloo/rendezvous/redis_store.h>
 #endif
-#include <iostream>
+
 namespace pygloo {
 namespace rendezvous {
 

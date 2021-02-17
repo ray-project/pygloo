@@ -11,7 +11,7 @@ void allreduce(const std::shared_ptr<gloo::Context> &context, intptr_t sendbuf,
   std::vector<T *> input_ptr{reinterpret_cast<T *>(sendbuf)};
   std::vector<T *> output_ptr{reinterpret_cast<T *>(recvbuf)};
 
-  // Configure AllreduceOptions struct and call allreduec function
+  // Configure AllreduceOptions struct and call allreduce function
   gloo::AllreduceOptions opts_(context);
   opts_.setInputs(input_ptr, size);
   opts_.setOutputs(output_ptr, size);

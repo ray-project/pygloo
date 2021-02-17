@@ -37,17 +37,7 @@ void def_transport_tcp_module(pybind11::module &m) {
   pybind11::class_<gloo::transport::tcp::Device,
                    std::shared_ptr<gloo::transport::tcp::Device>,
                    gloo::transport::Device>(tcp, "Device")
-      .def(pybind11::init<const struct gloo::transport::tcp::attr &>())
-      // .def("registerDescriptor",
-      // &gloo::transport::tcp::Device::registerDescriptor)
-      // .def("unregisterDescriptor",
-      // &gloo::transport::tcp::Device::unregisterDescriptor) .def("str",
-      // &gloo::transport::tcp::Device::str) .def("getPCIBusID",
-      // &gloo::transport::tcp::Device::getPCIBusID) .def("getInterfaceSpeed",
-      // &gloo::transport::tcp::Device::getInterfaceSpeed) .def("createContext",
-      // &gloo::transport::tcp::Device::createContext,
-      // pybind11::return_value_policy::reference);
-      ;
+      .def(pybind11::init<const struct gloo::transport::tcp::attr &>());
 }
 #else
 void def_transport_tcp_module(pybind11::module &m) {
@@ -77,7 +67,6 @@ void def_transport_uv_module(pybind11::module &m) {
                                                                    "Context")
       .def(pybind11::init<std::shared_ptr<gloo::transport::uv::Device>, int,
                           int>())
-      // .def("createPair", &gloo::transport::uv::Context::createPair)
       .def("createUnboundBuffer",
            &gloo::transport::uv::Context::createUnboundBuffer);
 
