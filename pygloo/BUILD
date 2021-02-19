@@ -1,4 +1,5 @@
 load("@rules_foreign_cc//tools/build_defs:cmake.bzl", "cmake_external")
+load("@rules_foreign_cc//tools/build_defs:make.bzl", "make")
 load("@pybind11_bazel//:build_defs.bzl", "pybind_library")
 load("@pybind11_bazel//:build_defs.bzl", "pybind_extension")
 
