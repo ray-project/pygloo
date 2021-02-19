@@ -49,6 +49,7 @@ PYBIND11_MODULE(pygloo, m) {
       .value("glooInt32", pygloo::glooDataType_t::glooInt32)
       .value("glooUint32", pygloo::glooDataType_t::glooUint32)
       .value("glooInt64", pygloo::glooDataType_t::glooInt64)
+      .value("glooUint64", pygloo::glooDataType_t::glooUint64)
       .value("glooFloat16", pygloo::glooDataType_t::glooFloat16)
       .value("glooFloat32", pygloo::glooDataType_t::glooFloat32)
       .value("glooFloat64", pygloo::glooDataType_t::glooFloat64)
