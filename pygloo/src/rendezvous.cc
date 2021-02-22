@@ -76,6 +76,20 @@ void def_rendezvous_module(pybind11::module &m) {
         }
         freeReplyObject(reply);
       }
+      void execCommand (std::string command){
+        void *ptr = (redisReply *)redisCommand(
+            redis_, "%b", command.c_str(), (size_t)command.size());
+
+        if (ptr == nullptr) {
+            GLOO_THROW_IO_EXCEPTION(redis_->errstr);
+        }
+        redisReply* reply = static_cast<redisReply*>(ptr);
+        if (reply->type == REDIS_REPLY_ERROR) {
+            GLOO_THROW_IO_EXCEPTION("Error: ", reply->str);
+        }
+        freeReplyObject(reply);
+      }
+
   };
 
   pybind11::class_<gloo::rendezvous::RedisStore, gloo::rendezvous::Store,
@@ -85,15 +99,15 @@ void def_rendezvous_module(pybind11::module &m) {
       .def("set", &gloo::rendezvous::RedisStore::set)
       .def("get", &gloo::rendezvous::RedisStore::get);
 
-  pybind11::class_<RedisStoreWithAuth, // gloo::rendezvous::RedisStore,
+  pybind11::class_<RedisStoreWithAuth, gloo::rendezvous::RedisStore,
                    gloo::rendezvous::Store,
-                   std::shared_ptr<RedisStoreWithAuth>
-                   >
+                   std::shared_ptr<RedisStoreWithAuth>>
                    (rendezvous, "RedisStore")
       .def(pybind11::init<const std::string &, int>())
       .def("set", &RedisStoreWithAuth::set)
       .def("get", &RedisStoreWithAuth::get)
-      .def("authorize", &RedisStoreWithAuth::authorize);
+      .def("authorize", &RedisStoreWithAuth::authorize)
+      .def("execCommand", &RedisStoreWithAuth::execCommand);
 
 #endif
 }

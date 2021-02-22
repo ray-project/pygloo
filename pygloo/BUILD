@@ -43,9 +43,9 @@ cmake_external(
         "HIREDIS_LIB_DIR": "$EXT_BUILD_DEPS/hiredis/lib",
 
         "USE_REDIS": "on",
-        "USE_IBVERBS": "on",
-        "USE_NCCL": "on",
-        "USE_RCCL": "on",
+        "USE_IBVERBS": "off",
+        "USE_NCCL": "off",
+        "USE_RCCL": "off",
         "USE_LIBUV": "on",
         "USE_TCP_OPENSSL": "off",
     },

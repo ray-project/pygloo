@@ -106,10 +106,11 @@ def pip_run(build_ext):
         move_file(build_ext.build_lib, filename)
 
 
+
 if __name__ == "__main__":
     import setuptools
     import setuptools.command.build_ext
-
+    from setuptools.command.install import install
     class build_ext(setuptools.command.build_ext.build_ext):
         def run(self):
             return pip_run(self)
@@ -117,6 +118,12 @@ if __name__ == "__main__":
     class BinaryDistribution(setuptools.Distribution):
         def has_ext_modules(self):
             return True
+
+    class InstallPlatlib(install):
+        def finalize_options(self):
+            install.finalize_options(self)
+            if self.distribution.has_ext_modules():
+                self.install_lib = self.install_platlib
 
     setuptools.setup(
         name="pygloo",
