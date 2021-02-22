@@ -1,16 +1,28 @@
 # pygloo
 
-Pygloo provides Python bindings for [gloo](https://github.com/facebookincubator/gloo). It is implemented by using [pybind11](https://github.com/pybind/pybind11) which provides simple interface to expose C++ type to python and creates Python binding of existing C++ code.
+Pygloo provides Python bindings for [gloo](https://github.com/facebookincubator/gloo). 
+It is implemented using [pybind11](https://github.com/pybind/pybind11).
 
-## Building from source
-Pygloo uses [Bazel](https://github.com/bazelbuild/bazel) to automatically download dependencies and compile them.
+It is currenlty used in [Ray for collective communication](https://github.com/ray-project/ray/tree/master/python/ray/util/collective) between CPUs. 
 
-After installing Bazel, You can build from source and install pygloo by using this command:
 
-    python setup.py install
+## Installation
+### Install From Wheels
+```python
+pip install pygloo
+```
+
+### Building from source
+Pygloo uses [Bazel](https://github.com/bazelbuild/bazel) to automatically manange dependencies and compilation.
+To compile from source, install Bazel>=2.0.0 following the [Bazel installation guide](https://docs.bazel.build/versions/master/install.html). 
+
+After installing Bazel, You can build from source and install pygloo following this command:
+```python
+python setup.py install
+```
 
 ## Testing
-Pygloo using [ray](https://github.com/ray-project/ray) to create multiprocess for collective communication tests. See `tests` directory.
+Pygloo uses [Ray](https://github.com/ray-project/ray) to create multiple, distributed processes for collective communication tests. See `tests` directory.
 
 ## Example
 An example for allreduce.
