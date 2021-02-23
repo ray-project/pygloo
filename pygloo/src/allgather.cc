@@ -108,4 +108,3 @@ void allgatherv_wrapper(const std::shared_ptr<gloo::Context> &context,
   }
 }
 } // namespace pygloo
-
