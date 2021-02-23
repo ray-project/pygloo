@@ -1,11 +1,10 @@
-#include <rendezvous.h>
 #include <gloo/config.h>
+#include <rendezvous.h>
 
 #include <gloo/rendezvous/context.h>
 #include <gloo/rendezvous/file_store.h>
 #include <gloo/rendezvous/hash_store.h>
 #include <gloo/rendezvous/prefix_store.h>
-
 
 #if GLOO_USE_REDIS
 #include <gloo/rendezvous/redis_store.h>
@@ -55,54 +54,54 @@ void def_rendezvous_module(pybind11::module &m) {
 #if GLOO_USE_REDIS
   class RedisStoreWithAuth : public gloo::rendezvous::RedisStore {
   public:
-      RedisStoreWithAuth(const std::string& host, int port):
-        gloo::rendezvous::RedisStore(host, port){};
-      using gloo::rendezvous::RedisStore::set;
-      using gloo::rendezvous::RedisStore::get;
-      using gloo::rendezvous::RedisStore::check;
-      using gloo::rendezvous::RedisStore::wait;
-      using gloo::rendezvous::RedisStore::redis_;
+    RedisStoreWithAuth(const std::string &host, int port)
+        : gloo::rendezvous::RedisStore(host, port){};
+    using gloo::rendezvous::RedisStore::check;
+    using gloo::rendezvous::RedisStore::get;
+    using gloo::rendezvous::RedisStore::redis_;
+    using gloo::rendezvous::RedisStore::set;
+    using gloo::rendezvous::RedisStore::wait;
 
-      void authorize (std::string redis_password){
-        void *ptr = (redisReply *)redisCommand(
-            redis_, "auth %b", redis_password.c_str(), (size_t)redis_password.size());
+    void authorize(std::string redis_password) {
+      void *ptr =
+          (redisReply *)redisCommand(redis_, "auth %b", redis_password.c_str(),
+                                     (size_t)redis_password.size());
 
-        if (ptr == nullptr) {
-            GLOO_THROW_IO_EXCEPTION(redis_->errstr);
-        }
-        redisReply* reply = static_cast<redisReply*>(ptr);
-        if (reply->type == REDIS_REPLY_ERROR) {
-            GLOO_THROW_IO_EXCEPTION("Error: ", reply->str);
-        }
-        freeReplyObject(reply);
+      if (ptr == nullptr) {
+        GLOO_THROW_IO_EXCEPTION(redis_->errstr);
       }
-      void execCommand (std::string command){
-        void *ptr = (redisReply *)redisCommand(
-            redis_, "%b", command.c_str(), (size_t)command.size());
-
-        if (ptr == nullptr) {
-            GLOO_THROW_IO_EXCEPTION(redis_->errstr);
-        }
-        redisReply* reply = static_cast<redisReply*>(ptr);
-        if (reply->type == REDIS_REPLY_ERROR) {
-            GLOO_THROW_IO_EXCEPTION("Error: ", reply->str);
-        }
-        freeReplyObject(reply);
+      redisReply *reply = static_cast<redisReply *>(ptr);
+      if (reply->type == REDIS_REPLY_ERROR) {
+        GLOO_THROW_IO_EXCEPTION("Error: ", reply->str);
       }
+      freeReplyObject(reply);
+    }
+    void execCommand(std::string command) {
+      void *ptr = (redisReply *)redisCommand(redis_, "%b", command.c_str(),
+                                             (size_t)command.size());
 
+      if (ptr == nullptr) {
+        GLOO_THROW_IO_EXCEPTION(redis_->errstr);
+      }
+      redisReply *reply = static_cast<redisReply *>(ptr);
+      if (reply->type == REDIS_REPLY_ERROR) {
+        GLOO_THROW_IO_EXCEPTION("Error: ", reply->str);
+      }
+      freeReplyObject(reply);
+    }
   };
 
   pybind11::class_<gloo::rendezvous::RedisStore, gloo::rendezvous::Store,
-                   std::shared_ptr<gloo::rendezvous::RedisStore>>
-                   (rendezvous, "_RedisStore")
+                   std::shared_ptr<gloo::rendezvous::RedisStore>>(rendezvous,
+                                                                  "_RedisStore")
       .def(pybind11::init<const std::string &, int>())
       .def("set", &gloo::rendezvous::RedisStore::set)
       .def("get", &gloo::rendezvous::RedisStore::get);
 
   pybind11::class_<RedisStoreWithAuth, gloo::rendezvous::RedisStore,
                    gloo::rendezvous::Store,
-                   std::shared_ptr<RedisStoreWithAuth>>
-                   (rendezvous, "RedisStore")
+                   std::shared_ptr<RedisStoreWithAuth>>(rendezvous,
+                                                        "RedisStore")
       .def(pybind11::init<const std::string &, int>())
       .def("set", &RedisStoreWithAuth::set)
       .def("get", &RedisStoreWithAuth::get)

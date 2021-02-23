@@ -58,4 +58,4 @@ void reduce_wrapper(const std::shared_ptr<gloo::Context> &context,
     throw std::runtime_error("Unhandled dataType");
   }
 }
-} // pygloo
+} // namespace pygloo
