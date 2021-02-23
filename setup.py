@@ -125,20 +125,26 @@ if __name__ == "__main__":
             if self.distribution.has_ext_modules():
                 self.install_lib = self.install_platlib
 
+    with open(os.path.join(ROOT_DIR, "README.md"), encoding="utf-8") as f:
+        long_description = f.read()
+
     setuptools.setup(
         name="pygloo",
         version="0.1.0",
         author="Ray Team",
         author_email="ray-dev@googlegroups.com",
         description=("A python binding for gloo"),
-        long_description=io.open(
-            os.path.join(ROOT_DIR, "README.md"),
-            "r",
-            encoding="utf-8").read(),
+        long_description=long_description,
+        long_description_content_type="text/markdown",
         url="https://github.com/ray-project/pygloo",
+        classifiers=[
+            'Programming Language :: Python :: 3',
+            'Topic :: Scientific/Engineering :: Artificial Intelligence'
+        ],
         keywords=("collective communication"),
         packages=setuptools.find_packages(),
-        cmdclass={"build_ext": build_ext},
+        cmdclass={"build_ext": build_ext,
+                  "install": InstallPlatlib},
         # The BinaryDistribution argument triggers build_ext.
         distclass=BinaryDistribution,
         install_requires=install_requires,

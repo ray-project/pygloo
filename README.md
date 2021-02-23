@@ -6,17 +6,24 @@ It is implemented using [pybind11](https://github.com/pybind/pybind11).
 It is currenlty used in [Ray for collective communication](https://github.com/ray-project/ray/tree/master/python/ray/util/collective) between CPUs. 
 
 
+## Requirements
+```python
+Python >= 3.6
+```
+
 ## Installation
 ### Install From Wheels
+We provide prepackaged Python wheels (`manylinux_2_24_x86_64`). To install from wheels:
 ```python
 pip install pygloo
 ```
 
 ### Building from source
-Pygloo uses [Bazel](https://github.com/bazelbuild/bazel) to automatically manange dependencies and compilation.
-To compile from source, install Bazel>=2.0.0 following the [Bazel installation guide](https://docs.bazel.build/versions/master/install.html). 
+One can build pygloo from source if none of released wheels fit with the development environment.
 
-After installing Bazel, You can build from source and install pygloo following this command:
+Pygloo uses [Bazel](https://github.com/bazelbuild/bazel) to automatically manange dependencies and compilation.
+To compile from source, install Bazel>=2.0.0 following the [Bazel installation guide](https://docs.bazel.build/versions/master/install.html).
+After installing Bazel, build and install pygloo following this command:
 ```python
 python setup.py install
 ```
