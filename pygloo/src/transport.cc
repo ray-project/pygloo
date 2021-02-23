@@ -63,17 +63,16 @@ void def_transport_uv_module(pybind11::module &m) {
       .def_readwrite("ai_addrlen", &gloo::transport::uv::attr::ai_addrlen);
 
   pybind11::class_<gloo::transport::uv::Context,
-                   std::shared_ptr<gloo::transport::uv::Context>>(uv,
-                                                                   "Context")
+                   std::shared_ptr<gloo::transport::uv::Context>>(uv, "Context")
       .def(pybind11::init<std::shared_ptr<gloo::transport::uv::Device>, int,
                           int>())
       .def("createUnboundBuffer",
            &gloo::transport::uv::Context::createUnboundBuffer);
 
   pybind11::class_<gloo::transport::uv::Device,
-                  std::shared_ptr<gloo::transport::uv::Device>,
-                  gloo::transport::Device>(uv, "Device")
-    .def(pybind11::init<const struct gloo::transport::uv::attr &>());
+                   std::shared_ptr<gloo::transport::uv::Device>,
+                   gloo::transport::Device>(uv, "Device")
+      .def(pybind11::init<const struct gloo::transport::uv::attr &>());
 }
 #else
 void def_transport_uv_module(pybind11::module &m) {

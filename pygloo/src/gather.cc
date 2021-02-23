@@ -12,7 +12,7 @@ void gather(const std::shared_ptr<gloo::Context> &context, intptr_t sendbuf,
   T *input_ptr = reinterpret_cast<T *>(sendbuf);
   opts_.setInput(input_ptr, size);
 
-  if(root == context->rank){
+  if (root == context->rank) {
     T *output_ptr = reinterpret_cast<T *>(recvbuf);
     opts_.setOutput(output_ptr, context->size * size);
   }

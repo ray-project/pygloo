@@ -5,7 +5,8 @@ namespace pygloo {
 
 template <typename T>
 void reduce(const std::shared_ptr<gloo::Context> &context, intptr_t sendbuf,
-            intptr_t recvbuf, size_t size, ReduceOp reduceop, int root, uint32_t tag) {
+            intptr_t recvbuf, size_t size, ReduceOp reduceop, int root,
+            uint32_t tag) {
   T *input_ptr = reinterpret_cast<T *>(sendbuf);
   T *output_ptr = reinterpret_cast<T *>(recvbuf);
 
@@ -23,7 +24,8 @@ void reduce(const std::shared_ptr<gloo::Context> &context, intptr_t sendbuf,
 
 void reduce_wrapper(const std::shared_ptr<gloo::Context> &context,
                     intptr_t sendbuf, intptr_t recvbuf, size_t size,
-                    glooDataType_t datatype, ReduceOp reduceop, int root, uint32_t tag) {
+                    glooDataType_t datatype, ReduceOp reduceop, int root,
+                    uint32_t tag) {
   switch (datatype) {
   case glooDataType_t::glooInt8:
     reduce<int8_t>(context, sendbuf, recvbuf, size, reduceop, root, tag);

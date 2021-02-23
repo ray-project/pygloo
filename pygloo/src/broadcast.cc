@@ -11,7 +11,7 @@ void broadcast(const std::shared_ptr<gloo::Context> &context, intptr_t sendbuf,
   // Configure BroadcastOptions struct and call broadcast function
   gloo::BroadcastOptions opts_(context);
 
-  if(context->rank == root){
+  if (context->rank == root) {
     T *input_ptr = reinterpret_cast<T *>(sendbuf);
     opts_.setInput(input_ptr, size);
   }

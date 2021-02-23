@@ -26,7 +26,8 @@ void scatter(const std::shared_ptr<gloo::Context> &context,
 
 void scatter_wrapper(const std::shared_ptr<gloo::Context> &context,
                      std::vector<intptr_t> sendbuf, intptr_t recvbuf,
-                     size_t size, glooDataType_t datatype, int root, uint32_t tag) {
+                     size_t size, glooDataType_t datatype, int root,
+                     uint32_t tag) {
   switch (datatype) {
   case glooDataType_t::glooInt8:
     scatter<int8_t>(context, sendbuf, recvbuf, size, root, tag);
