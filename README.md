@@ -1,9 +1,9 @@
 # pygloo
 
-Pygloo provides Python bindings for [gloo](https://github.com/facebookincubator/gloo). 
+Pygloo provides Python bindings for [gloo](https://github.com/facebookincubator/gloo).
 It is implemented using [pybind11](https://github.com/pybind/pybind11).
 
-It is currenlty used in [Ray for collective communication](https://github.com/ray-project/ray/tree/master/python/ray/util/collective) between CPUs. 
+It is currenlty used in [Ray for collective communication](https://github.com/ray-project/ray/tree/master/python/ray/util/collective) between CPUs.
 
 
 ## Requirements
@@ -13,7 +13,7 @@ Python >= 3.6
 
 ## Installation
 ### Install From Wheels
-We provide prepackaged Python wheels (`manylinux_2_24_x86_64`). To install from wheels:
+We provide prepackaged Python wheels (`manylinux2014_x86_64`,`manylinux_2_24_x86_64`). To install from wheels:
 ```python
 pip install pygloo
 ```
