@@ -10,6 +10,7 @@ http_archive(
    name = "rules_foreign_cc",
    strip_prefix = "rules_foreign_cc-master",
    url = "https://github.com/bazelbuild/rules_foreign_cc/archive/master.zip",
+   sha256 = "21c2640365de0f2cfba1a179ae772d7a150e50541ba7d0d75139fa3c895e87eb",
 )
 
 load("@rules_foreign_cc//:workspace_definitions.bzl", "rules_foreign_cc_dependencies")
@@ -43,6 +44,7 @@ http_archive(
    name = "pybind11_bazel",
    strip_prefix = "pybind11_bazel-f4f1bd4fa4b368b79dd6f003f8ef8c5a91fad36b",
    urls = ["https://github.com/Ezra-H/pybind11_bazel/archive/f4f1bd4fa4b368b79dd6f003f8ef8c5a91fad36b.zip"],
+   sha256 = "6ea811e7a7348f7c9d5b59887aa0c65e42222e199049a1ee55db147d2e9ca4a7",
 )
 
 # We still require the pybind library.
@@ -51,6 +53,7 @@ http_archive(
    build_file = "@pybind11_bazel//:pybind11.BUILD",
    strip_prefix = "pybind11-2.6.1",
    urls = ["https://github.com/pybind/pybind11/archive/v2.6.1.tar.gz"],
+   sha256 = "cdbe326d357f18b83d10322ba202d69f11b2f49e2d87ade0dc2be0c5c34f8e2a",
 )
 
 http_archive(
@@ -75,6 +78,7 @@ http_archive(
    build_file_content = all_content,
    strip_prefix = "gloo-add3f38c6a2715e9387f4966b4fc3d92bb786adb",
    urls = ["https://github.com/Ezra-H/gloo/archive/add3f38c6a2715e9387f4966b4fc3d92bb786adb.tar.gz"],
+   sha256 = "a146136bb6efdac0e3ede952d09aec44b771a87ebc713bd815c3a90a7428c908",
 )
 
 load("@pybind11_bazel//:python_configure.bzl", "python_configure_pybind")
