@@ -32,11 +32,8 @@ cmake_external(
     # Values to be passed as -Dkey=value on the CMake command line;
     # here are serving to provide some CMake script configuration options
     cache_entries = {
-        "PKG_CONFIG_PATH": "$EXT_BUILD_ROOT/bazel-out/host/bin/pygloo/copy_libuv/libuv/lib64/pkgconfig:$EXT_BUILD_ROOT/bazel-out/host/bin/pygloo/copy_hiredis/hiredis/lib/pkgconfig:$PKG_CONFIG_PATH", # maybe useless
-
         "libuv_LIBDIR": "$EXT_BUILD_DEPS/libuv/lib64",
         "libuv_INCLUDE_DIRS": "$EXT_BUILD_DEPS/libuv/include",
-        "libuv_LIBRARY": "$EXT_BUILD_DEPS/libuv/lib64/libuv_a.a",
 
         "HIREDIS_NESTED_INCLUDE": "off", # 'on' use hiredis/hiredis.h, 'off' use hiredis.h.
         "HIREDIS_ROOT_DIR":"$EXT_BUILD_DEPS/hiredis",
