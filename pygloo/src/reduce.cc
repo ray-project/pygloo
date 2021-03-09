@@ -25,6 +25,9 @@ void reduce(const std::shared_ptr<gloo::Context> &context, intptr_t sendbuf,
   opts_.setTag(tag);
 
   gloo::reduce(opts_);
+
+  if(context->rank != root)
+    delete output_ptr;
 }
 
 void reduce_wrapper(const std::shared_ptr<gloo::Context> &context,
