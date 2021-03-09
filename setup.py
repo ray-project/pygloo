@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
     setuptools.setup(
         name="pygloo",
-        version="0.1.0",
+        version="0.2.0",
         author="Ray Team",
         author_email="ray-dev@googlegroups.com",
         description=("A python binding for gloo"),
