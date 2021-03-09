@@ -2,13 +2,17 @@
 #include <rendezvous.h>
 
 #include <gloo/rendezvous/context.h>
+#include <gloo/rendezvous/store.h>
 #include <gloo/rendezvous/file_store.h>
 #include <gloo/rendezvous/hash_store.h>
 #include <gloo/rendezvous/prefix_store.h>
 
 #if GLOO_USE_REDIS
 #include <gloo/rendezvous/redis_store.h>
+#include <pybind11/stl.h>
 #endif
+
+using namespace gloo;
 
 namespace pygloo {
 namespace rendezvous {
@@ -76,9 +80,40 @@ void def_rendezvous_module(pybind11::module &m) {
       }
       freeReplyObject(reply);
     }
-    void execCommand(std::string command) {
-      void *ptr = (redisReply *)redisCommand(redis_, "%b", command.c_str(),
-                                             (size_t)command.size());
+
+    void delKey(const std::string &key) {
+      void* ptr = redisCommand(redis_, "del %b", key.c_str(), (size_t)key.size());
+
+      if (ptr == nullptr) {
+        GLOO_THROW_IO_EXCEPTION(redis_->errstr);
+      }
+      redisReply *reply = static_cast<redisReply *>(ptr);
+      if (reply->type == REDIS_REPLY_ERROR) {
+        GLOO_THROW_IO_EXCEPTION("Error: ", reply->str);
+      }
+      freeReplyObject(reply);
+    }
+
+    void delKeys(const std::vector<std::string> &keys) {
+      bool result = check(keys);
+      if(!result)
+        GLOO_THROW_IO_EXCEPTION("Error: keys not exist");
+
+      std::vector<std::string> args;
+      args.push_back("del");
+      for (const auto& key : keys) {
+        args.push_back(key);
+      }
+
+      std::vector<const char*> argv;
+      std::vector<size_t> argvlen;
+      for (const auto& arg : args) {
+        argv.push_back(arg.c_str());
+        argvlen.push_back(arg.length());
+      }
+
+      auto argc = argv.size();
+      void* ptr = redisCommandArgv(redis_, argc, argv.data(), argvlen.data());
 
       if (ptr == nullptr) {
         GLOO_THROW_IO_EXCEPTION(redis_->errstr);
@@ -106,8 +141,8 @@ void def_rendezvous_module(pybind11::module &m) {
       .def("set", &RedisStoreWithAuth::set)
       .def("get", &RedisStoreWithAuth::get)
       .def("authorize", &RedisStoreWithAuth::authorize)
-      .def("execCommand", &RedisStoreWithAuth::execCommand);
-
+      .def("delKey", &RedisStoreWithAuth::delKey)
+      .def("delKeys", &RedisStoreWithAuth::delKeys);
 #endif
 }
 } // namespace rendezvous
