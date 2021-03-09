@@ -8,7 +8,12 @@ void reduce(const std::shared_ptr<gloo::Context> &context, intptr_t sendbuf,
             intptr_t recvbuf, size_t size, ReduceOp reduceop, int root,
             uint32_t tag) {
   T *input_ptr = reinterpret_cast<T *>(sendbuf);
-  T *output_ptr = reinterpret_cast<T *>(recvbuf);
+
+  T *output_ptr;
+  if(context->rank == root)
+    output_ptr = reinterpret_cast<T *>(recvbuf);
+  else
+    output_ptr = new T[size];
 
   // Configure reduceOptions struct
   gloo::ReduceOptions opts_(context);
@@ -20,6 +25,9 @@ void reduce(const std::shared_ptr<gloo::Context> &context, intptr_t sendbuf,
   opts_.setTag(tag);
 
   gloo::reduce(opts_);
+
+  if(context->rank != root)
+    delete output_ptr;
 }
 
 void reduce_wrapper(const std::shared_ptr<gloo::Context> &context,
