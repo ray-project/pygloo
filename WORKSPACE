@@ -8,9 +8,9 @@ all_content = """filegroup(name = "all", srcs = glob(["**"]), visibility = ["//v
 # Rule repository
 http_archive(
    name = "rules_foreign_cc",
-   strip_prefix = "rules_foreign_cc-master",
-   url = "https://github.com/bazelbuild/rules_foreign_cc/archive/master.zip",
-   sha256 = "21c2640365de0f2cfba1a179ae772d7a150e50541ba7d0d75139fa3c895e87eb",
+   strip_prefix = "rules_foreign_cc-87df6b25f6c009883da87f07ea680d38780a4d6f",
+   url = "https://github.com/bazelbuild/rules_foreign_cc/archive/87df6b25f6c009883da87f07ea680d38780a4d6f.zip",
+   sha256 = "a45511a054598dd9b87d4d5765a18df4e5777736026087cf96ffc30704e6c918",
 )
 
 load("@rules_foreign_cc//:workspace_definitions.bzl", "rules_foreign_cc_dependencies")
