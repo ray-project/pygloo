@@ -7,6 +7,12 @@
 #include <gloo/rendezvous/hash_store.h>
 #include <gloo/rendezvous/prefix_store.h>
 
+#include <iostream>
+
+#include <pybind11/functional.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/pytypes.h>
+
 #if GLOO_USE_REDIS
 #include <gloo/rendezvous/redis_store.h>
 #include <pybind11/stl.h>
@@ -144,6 +150,58 @@ void def_rendezvous_module(pybind11::module &m) {
       .def("delKey", &RedisStoreWithAuth::delKey)
       .def("delKeys", &RedisStoreWithAuth::delKeys);
 #endif
+
+
+class CustomStore: public gloo::rendezvous::Store {
+ public:
+  explicit CustomStore(const pybind11::object &real_store_py_object)
+      :real_store_py_object_(real_store_py_object) {
+  }
+
+  virtual ~CustomStore() {}
+
+  virtual void set(const std::string& key, const std::vector<char>& data) override {
+    pybind11::str py_key(key.data(), key.size());
+    pybind11::bytes py_data(data.data(), data.size());
+    auto set_func = real_store_py_object_.attr("set");
+    set_func(py_key, py_data);
+  }
+
+  virtual std::vector<char> get(const std::string& key) override {
+    /// Wait until key being ready.
+    wait({key});
+
+    pybind11::str py_key(key.data(), key.size());
+    auto get_func = real_store_py_object_.attr("get");
+    pybind11::bytes data = get_func(py_key);
+    std::string ret_str = data;
+    std::vector<char> ret(ret_str.data(), ret_str.data() + ret_str.size());
+    return ret;
+  }
+
+  virtual void wait(const std::vector<std::string>& keys) override {
+    wait(keys, Store::kDefaultTimeout);
+  }
+
+  virtual void wait(const std::vector<std::string>& keys, const std::chrono::milliseconds& timeout) override {
+    // We now ignore the timeout_ms.
+
+    pybind11::list py_keys = pybind11::cast(keys);
+    auto wait_func = real_store_py_object_.attr("wait");
+    wait_func(py_keys);
+  }
+
+ protected:
+  const pybind11::object real_store_py_object_;
+};
+
+
+  pybind11::class_<CustomStore, gloo::rendezvous::Store,
+                   std::shared_ptr<CustomStore>>(rendezvous, "CustomStore")
+      .def(pybind11::init<const pybind11::object&>())
+      .def("set", &CustomStore::set)
+      .def("get", &CustomStore::get);
+
 }
 } // namespace rendezvous
 } // namespace pygloo
