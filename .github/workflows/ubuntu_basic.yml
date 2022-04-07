@@ -23,13 +23,13 @@ jobs:
             wget "https://github.com/bazelbuild/bazel/releases/download/5.1.0/bazel_5.1.0-linux-x86_64.deb" -O bazel_5.1.0-linux-x86_64.deb
             dpkg -i bazel_5.1.0-linux-x86_64.deb
 
-    - name: Install Ray
+    - name: Install dependencies
       run:  |
             python3 -m pip install virtualenv
             python3 -m virtualenv -p python3 py3
             . py3/bin/activate
             which python
-            pip install pytest
+            pip install pytest torch
             pip install ray==1.11.0
 
     - name: Build Pygloo
