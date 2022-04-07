@@ -27,13 +27,13 @@ jobs:
       run:  |
             python3 -m pip install virtualenv
             python3 -m virtualenv -p python3 py3
-            source py3/bin/activate
+            . py3/bin/activate
             which python
             pip install pytest
             pip install ray==1.11.0
 
     - name: Build Pygloo
-      run: python setup.py install
+      run: python3 setup.py install
 
     - name: Test
       run: pytest -v ./tests
