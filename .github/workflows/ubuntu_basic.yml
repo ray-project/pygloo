@@ -19,7 +19,8 @@ jobs:
       run:  |
             apt-get update
             apt-get install -yq wget gcc g++ openjdk-8-jdk python3.7 zlib1g-dev zip
-            sh scripts/install-bazel.sh
+            wget "https://github.com/bazelbuild/bazel/releases/download/5.1.0/bazel_5.1.0-linux-x86_64.deb" -O bazel_5.1.0-linux-x86_64.deb
+            dpkg -i bazel_5.1.0-linux-x86_64.deb
 
     - name: Install Ray
       run: pip install ray==1.11.0
@@ -29,3 +30,4 @@ jobs:
 
     - name: Test
       run: pytest -v ./tests
+
