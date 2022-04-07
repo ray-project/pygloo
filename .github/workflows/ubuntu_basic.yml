@@ -18,7 +18,7 @@ jobs:
     - name: Install bazel
       run:  |
             apt-get update
-            apt-get install -yq wget gcc g++ python3.8 zlib1g-dev zip libuv1.dev
+            apt-get install -yq wget gcc g++ python3.7 zlib1g-dev zip libuv1.dev
             apt-get install -yq pip
             wget "https://github.com/bazelbuild/bazel/releases/download/5.1.0/bazel_5.1.0-linux-x86_64.deb" -O bazel_5.1.0-linux-x86_64.deb
             dpkg -i bazel_5.1.0-linux-x86_64.deb
@@ -35,5 +35,5 @@ jobs:
     - name: Build and test
       run: |
            . py3/bin/activate
-           python setup.py install
+           python3 setup.py install
            cd tests & pytest *
