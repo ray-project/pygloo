@@ -40,4 +40,4 @@ jobs:
     - name: Test
       run: |
            . py3/bin/activate
-           pytest -v ./tests
+           cd tests & pytest *
