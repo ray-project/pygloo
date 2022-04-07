@@ -87,7 +87,7 @@ class Recver:
         return recvbuf
 
 
-def main():
+def test_basic():
     ray.init(num_cpus=6)
 
     sender = Sender.remote()
