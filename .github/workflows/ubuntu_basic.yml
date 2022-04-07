@@ -18,25 +18,26 @@ jobs:
     - name: Install bazel
       run:  |
             apt-get update
-            apt-get install -yq wget gcc g++ openjdk-8-jdk python3.7 zlib1g-dev zip
+            apt-get install -yq wget gcc g++ python3.8 zlib1g-dev zip libuv1.dev
             apt-get install -yq pip
             wget "https://github.com/bazelbuild/bazel/releases/download/5.1.0/bazel_5.1.0-linux-x86_64.deb" -O bazel_5.1.0-linux-x86_64.deb
             dpkg -i bazel_5.1.0-linux-x86_64.deb
 
-    - name: Install Ray
+    - name: Install dependencies
       run:  |
-            set -e
-            set -x
             python3 -m pip install virtualenv
             python3 -m virtualenv -p python3 py3
-            source py3/bin/activate
+            . py3/bin/activate
             which python
-            pip install pytest
+            pip install pytest torch
             pip install ray==1.11.0
 
     - name: Build Pygloo
-      run: python setup.py install
+      run: |
+           . py3/bin/activate
+           python setup.py install
 
     - name: Test
-      run: pytest -v ./tests
-
+      run: |
+           . py3/bin/activate
+           pytest -v ./tests

@@ -191,6 +191,12 @@ class CustomStore: public gloo::rendezvous::Store {
     wait_func(py_keys);
   }
 
+  void delKeys(const std::vector<std::string> &keys) {
+    pybind11::list py_keys = pybind11::cast(keys);
+    auto del_keys_func = real_store_py_object_.attr("del_keys");
+    del_keys_func(py_keys);
+  }
+
  protected:
   const pybind11::object real_store_py_object_;
 };
@@ -200,7 +206,8 @@ class CustomStore: public gloo::rendezvous::Store {
                    std::shared_ptr<CustomStore>>(rendezvous, "CustomStore")
       .def(pybind11::init<const pybind11::object&>())
       .def("set", &CustomStore::set)
-      .def("get", &CustomStore::get);
+      .def("get", &CustomStore::get)
+      .def("delKeys", &CustomStore::delKeys);
 
 }
 } // namespace rendezvous

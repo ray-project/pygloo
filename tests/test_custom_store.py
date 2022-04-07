@@ -36,6 +36,12 @@ class MyMockCustomStore:
                 return True
             time.sleep(1)
 
+    def del_keys(self, keys: list):
+        for key in keys:
+            ok = internal_kv._internal_kv_del(key)
+            if not ok:
+                return False
+        return True
 
 @ray.remote(num_cpus=1)
 class Sender:
