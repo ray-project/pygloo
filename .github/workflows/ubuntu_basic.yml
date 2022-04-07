@@ -33,8 +33,12 @@ jobs:
             pip install ray==1.11.0
 
     - name: Build Pygloo
-      run: python3 setup.py install
+      run: |
+           . py3/bin/activate
+           python setup.py install
 
     - name: Test
-      run: pytest -v ./tests
+      run: |
+           . py3/bin/activate
+           pytest -v ./tests
 
