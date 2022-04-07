@@ -5,6 +5,7 @@ import ray
 import time
 import shutil
 import torch
+import pytest
 
 import ray.experimental.internal_kv as internal_kv
 from ray._private.gcs_utils import GcsClient
@@ -55,7 +56,7 @@ class Sender:
         custom_store = pygloo.rendezvous.CustomStore(real_store)
         self._context.connectFullMesh(custom_store, dev)
 
-    def test_send(self):
+    def do_send(self):
         sendbuf = np.array([[1,2,3],[1,2,3]], dtype=np.float32)
         sendptr = sendbuf.ctypes.data
         pygloo.send(self._context, sendptr, sendbuf.size, pygloo.glooDataType_t.glooFloat32, 1)
@@ -74,7 +75,7 @@ class Recver:
         custom_store = pygloo.rendezvous.CustomStore(real_store)
         self._context.connectFullMesh(custom_store, dev)
 
-    def test_recv(self):
+    def do_recv(self):
         recvbuf = np.zeros((2, 3), dtype=np.float32)
         recvptr = recvbuf.ctypes.data
 
@@ -86,19 +87,21 @@ class Recver:
         return recvbuf
 
 
-def main():
+def test_basic():
     ray.init(num_cpus=6)
 
     sender = Sender.remote()
     recver = Recver.remote()
-    fn1 = sender.test_send.remote()
-    fn2 = recver.test_recv.remote()
+    fn1 = sender.do_send.remote()
+    fn2 = recver.do_recv.remote()
 
     a, b = ray.get([fn1, fn2])
-    print(a)
-    print(b)
-    print("END")
+    assert a
+    expected = [[1, 2, 3], [1, 2, 3]]
+    assert len(b) == 2
+    assert len(b[0]) == 3
+    assert len(b[1]) == 3
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(pytest.main(["-v", __file__]))
