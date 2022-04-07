@@ -206,7 +206,7 @@ class CustomStore: public gloo::rendezvous::Store {
                    std::shared_ptr<CustomStore>>(rendezvous, "CustomStore")
       .def(pybind11::init<const pybind11::object&>())
       .def("set", &CustomStore::set)
-      .def("get", &CustomStore::get);
+      .def("get", &CustomStore::get)
       .def("delKeys", &CustomStore::delKeys);
 
 }
