@@ -25,8 +25,12 @@ jobs:
 
     - name: Install Ray
       run:  |
+            set -e
+            set -x
             python3 -m pip install virtualenv
             python3 -m virtualenv -p python3 py3
+            source py3/bin/activate
+            which python
             pip install pytest
             pip install ray==1.11.0
 
