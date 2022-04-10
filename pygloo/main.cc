@@ -127,6 +127,33 @@ PYBIND11_MODULE(pygloo, m) {
       .def("setTimeout", &gloo::Context::setTimeout)
       .def("getTimeout", &gloo::Context::getTimeout);
 
+
+class FixedBuffer {
+
+ public:
+  explicit FixedBuffer(const pybind11::bytes &py_bytes) : data_(py_bytes) {
+      // TODO(qwang): Once we upgrade gloo, we can use std::string_view instead.
+  }
+
+  int size() const {
+        return static_cast<int>(data_.size());
+  }
+
+  char *buffer() {
+    return const_cast<char *>(data_.c_str());
+  }
+
+private:
+  std::string data_;
+};
+
+  pybind11::class_<FixedBuffer,
+                   std::shared_ptr<FixedBuffer>>(m, "FixedBuffer")
+      .def(pybind11::init<const pybind11::bytes&>())
+      .def("size", &FixedBuffer::size)
+      .def("buffer", &FixedBuffer::buffer);
+
   pygloo::transport::def_transport_module(m);
   pygloo::rendezvous::def_rendezvous_module(m);
 }
+
