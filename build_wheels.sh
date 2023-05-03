@@ -19,3 +19,15 @@ PYTHON_BIN_PATH='/opt/python/cp38-cp38/bin/python' /opt/python/cp38-cp38/bin/pyt
 auditwheel repair --plat manylinux2014_x86_64 dist/pygloo-0.2.0-cp38-cp38-linux_x86_64.whl
 bazel clean --expunge
 /opt/python/cp38-cp38/bin/python setup.py clean --all
+
+# Build py39 manylinux wheels
+PYTHON_BIN_PATH='/opt/python/cp39-cp39/bin/python' /opt/python/cp39-cp39/bin/python setup.py bdist_wheel
+auditwheel repair --plat manylinux2014_x86_64 dist/pygloo-0.2.0-cp39-cp39-linux_x86_64.whl
+bazel clean --expunge
+/opt/python/cp39-cp39/bin/python setup.py clean --all
+
+# Build py310 manylinux wheels
+PYTHON_BIN_PATH='/opt/python/cp310-cp310/bin/python' /opt/python/cp310-cp310/bin/python setup.py bdist_wheel
+auditwheel repair --plat manylinux2014_x86_64 dist/pygloo-0.2.0-cp310-cp310-linux_x86_64.whl
+bazel clean --expunge
+/opt/python/cp310-cp310/bin/python setup.py clean --all

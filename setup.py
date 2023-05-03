@@ -22,7 +22,7 @@ import urllib.request
 
 logger = logging.getLogger(__name__)
 
-SUPPORTED_PYTHONS = [(3, 6), (3, 7), (3, 8)]
+SUPPORTED_PYTHONS = [(3, 6), (3, 7), (3, 8), (3, 9), (3, 10)]
 SUPPORTED_BAZEL = (3, 2, 0)
 
 ROOT_DIR = os.path.dirname(__file__)
@@ -55,7 +55,7 @@ def bazel_invoke(invoker, cmdline, *args, **kwargs):
 
 def move_file(target_dir, filename):
     source = filename
-    destination = os.path.join(target_dir, filename.split('/')[-1])
+    destination = os.path.join(target_dir, filename.split("/")[-1])
     # Create the target directory if it doesn't already exist.
     os.makedirs(os.path.dirname(destination), exist_ok=True)
     if not os.path.exists(destination):
@@ -71,10 +71,13 @@ def move_file(target_dir, filename):
 def build():
     # no support windows
     if tuple(sys.version_info[:2]) not in SUPPORTED_PYTHONS:
-        msg = ("Detected Python version {}, which is not supported. "
-               "Only Python {} are supported.").format(
-                   ".".join(map(str, sys.version_info[:2])),
-                   ", ".join(".".join(map(str, v)) for v in SUPPORTED_PYTHONS))
+        msg = (
+            "Detected Python version {}, which is not supported. "
+            "Only Python {} are supported."
+        ).format(
+            ".".join(map(str, sys.version_info[:2])),
+            ", ".join(".".join(map(str, v)) for v in SUPPORTED_PYTHONS),
+        )
         raise RuntimeError(msg)
 
     bazel_env = dict(os.environ, PYTHON3_BIN_PATH=sys.executable)
@@ -87,14 +90,18 @@ def build():
     ]
     bazel_version = tuple(map(int, bazel_version_digits))
     if bazel_version < SUPPORTED_BAZEL:
-        logger.warning("Expected Bazel version {} but found {}".format(
-            ".".join(map(str, SUPPORTED_BAZEL)), bazel_version_str))
+        logger.warning(
+            "Expected Bazel version {} but found {}".format(
+                ".".join(map(str, SUPPORTED_BAZEL)), bazel_version_str
+            )
+        )
 
     bazel_targets = ["//pygloo:all"]
     return bazel_invoke(
         subprocess.check_call,
         ["build", "--verbose_failures", "--"] + bazel_targets,
-        env=bazel_env)
+        env=bazel_env,
+    )
 
 
 def pip_run(build_ext):
@@ -106,11 +113,11 @@ def pip_run(build_ext):
         move_file(build_ext.build_lib, filename)
 
 
-
 if __name__ == "__main__":
     import setuptools
     import setuptools.command.build_ext
     from setuptools.command.install import install
+
     class build_ext(setuptools.command.build_ext.build_ext):
         def run(self):
             return pip_run(self)
@@ -138,18 +145,17 @@ if __name__ == "__main__":
         long_description_content_type="text/markdown",
         url="https://github.com/ray-project/pygloo",
         classifiers=[
-            'Programming Language :: Python :: 3',
-            'Topic :: Scientific/Engineering :: Artificial Intelligence'
+            "Programming Language :: Python :: 3",
+            "Topic :: Scientific/Engineering :: Artificial Intelligence",
         ],
         keywords=("collective communication"),
         packages=setuptools.find_packages(),
-        cmdclass={"build_ext": build_ext,
-                  "install": InstallPlatlib},
+        cmdclass={"build_ext": build_ext, "install": InstallPlatlib},
         # The BinaryDistribution argument triggers build_ext.
         distclass=BinaryDistribution,
         install_requires=install_requires,
         setup_requires=["wheel"],
         include_package_data=True,
         zip_safe=False,
-        license="Apache 2.0"
+        license="Apache 2.0",
     )
