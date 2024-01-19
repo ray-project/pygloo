@@ -18,7 +18,7 @@ jobs:
     - name: Install bazel
       run:  |
             apt-get update
-            apt-get install -yq wget gcc g++ python3.7 zlib1g-dev zip libuv1.dev
+            apt-get install -yq wget gcc g++ python3 zlib1g-dev zip libuv1.dev
             apt-get install -yq pip
             wget "https://github.com/bazelbuild/bazel/releases/download/5.1.0/bazel_5.1.0-linux-x86_64.deb" -O bazel_5.1.0-linux-x86_64.deb
             dpkg -i bazel_5.1.0-linux-x86_64.deb
@@ -30,7 +30,7 @@ jobs:
             . py3/bin/activate
             which python
             pip install pytest torch
-            pip install ray==1.11.0
+            pip install ray==1.13.0
 
     - name: Build and test
       run: |

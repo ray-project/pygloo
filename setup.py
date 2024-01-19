@@ -22,7 +22,7 @@ import urllib.request
 
 logger = logging.getLogger(__name__)
 
-SUPPORTED_PYTHONS = [(3, 6), (3, 7), (3, 8)]
+SUPPORTED_PYTHONS = [(3, 6), (3, 7), (3, 8), (3, 9), (3, 10)]
 SUPPORTED_BAZEL = (3, 2, 0)
 
 ROOT_DIR = os.path.dirname(__file__)
