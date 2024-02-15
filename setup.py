@@ -44,6 +44,7 @@ def bazel_invoke(invoker, cmdline, *args, **kwargs):
         candidates.append(os.path.join(home, ".bazel", "bin", "bazel"))
     result = None
     for i, cmd in enumerate(candidates):
+        print("SANG-TODO cmd", cmd)
         try:
             result = invoker([cmd] + cmdline, *args, **kwargs)
             break
@@ -78,14 +79,17 @@ def build():
         raise RuntimeError(msg)
 
     bazel_env = dict(os.environ, PYTHON3_BIN_PATH=sys.executable)
+    print("SANG-TODO bazel_env", bazel_env)
 
     version_info = bazel_invoke(subprocess.check_output, ["--version"])
+    print("SANG-TODO bazel version: ", version_info)
     bazel_version_str = version_info.rstrip().decode("utf-8").split(" ", 1)[1]
     bazel_version_split = bazel_version_str.split(".")
     bazel_version_digits = [
         "".join(takewhile(str.isdigit, s)) for s in bazel_version_split
     ]
     bazel_version = tuple(map(int, bazel_version_digits))
+    print("SANG-TODO bazel version", bazel_version)
     if bazel_version < SUPPORTED_BAZEL:
         logger.warning("Expected Bazel version {} but found {}".format(
             ".".join(map(str, SUPPORTED_BAZEL)), bazel_version_str))
@@ -93,7 +97,7 @@ def build():
     bazel_targets = ["//pygloo:all"]
     return bazel_invoke(
         subprocess.check_call,
-        ["build", "--verbose_failures", "--"] + bazel_targets,
+        ["build", "--verbose_failures", "--subcommands", "--"] + bazel_targets,
         env=bazel_env)
 
 
