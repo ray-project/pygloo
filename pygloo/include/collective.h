@@ -1,3 +1,5 @@
+#include <future.h>
+
 #include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -96,9 +98,19 @@ void gather_wrapper(const std::shared_ptr<gloo::Context> &context,
 
 void send_wrapper(const std::shared_ptr<gloo::Context> &context,
                   intptr_t sendbuf, size_t size, glooDataType_t datatype,
+                  int peer, uint32_t tag = 0,
+                  std::chrono::milliseconds timeout_ms = std::chrono::milliseconds(0));
+
+std::shared_ptr<future::Future> isend_wrapper(const std::shared_ptr<gloo::Context> &context,
+                  intptr_t sendbuf, size_t size, glooDataType_t datatype,
                   int peer, uint32_t tag = 0);
 
 void recv_wrapper(const std::shared_ptr<gloo::Context> &context,
+                  intptr_t recvbuf, size_t size, glooDataType_t datatype,
+                  int peer, uint32_t tag = 0,
+                  std::chrono::milliseconds timeout_ms = std::chrono::milliseconds(0));
+
+std::shared_ptr<future::Future> irecv_wrapper(const std::shared_ptr<gloo::Context> &context,
                   intptr_t recvbuf, size_t size, glooDataType_t datatype,
                   int peer, uint32_t tag = 0);
 

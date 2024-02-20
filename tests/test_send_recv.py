@@ -39,7 +39,7 @@ def test_send_recv(rank, world_size, fileStore_path):
         data_size = sendbuf.size if isinstance(sendbuf, np.ndarray) else sendbuf.numpy().size
         datatype = pygloo.glooDataType_t.glooFloat32
         peer = 1
-        pygloo.send(context, sendptr, data_size, datatype, peer)
+        pygloo.send(context, sendptr, data_size, datatype, peer, 0, 1l)
         print(f"rank {rank} sends {sendbuf}")
 
     elif rank == 1:

@@ -67,9 +67,9 @@ http_archive(
 http_archive(
    name = "hiredis",
    build_file_content = all_content,
-   strip_prefix = "hiredis-1.0.0",
-   urls = ["https://github.com/redis/hiredis/archive/v1.0.0.tar.gz"],
-   sha256 = "2a0b5fe5119ec973a0c1966bfc4bd7ed39dbce1cb6d749064af9121fe971936f",
+   strip_prefix = "hiredis-1.2.0",
+   urls = ["https://github.com/redis/hiredis/archive/v1.2.0.tar.gz"],
+   sha256 = "82ad632d31ee05da13b537c124f819eb88e18851d9cb0c30ae0552084811588c",
 )
 
 # gloo source code repository

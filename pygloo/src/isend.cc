@@ -4,8 +4,8 @@
 namespace pygloo {
 
 template <typename T>
-void send(const std::shared_ptr<gloo::Context> &context, intptr_t sendbuf,
-          size_t size, int peer, uint32_t tag, std::chrono::milliseconds timeout_ms) {
+std::shared_ptr<future::Future> isend(const std::shared_ptr<gloo::Context> &context, intptr_t sendbuf,
+          size_t size, int peer, uint32_t tag) {
   if (context->rank == peer)
     throw std::runtime_error(
         "peer equals to current rank. Please specify other peer values.");
@@ -17,43 +17,39 @@ void send(const std::shared_ptr<gloo::Context> &context, intptr_t sendbuf,
   gloo::Slot slot = gloo::Slot::build(kSendRecvSlotPrefix, tag);
 
   inputBuffer->send(peer, slot);
-
-  if (timeout_ms == std::chrono::milliseconds(0)) {
-    timeout_ms = context->getTimeout();
-  }
-  inputBuffer->waitSend(timeout_ms);
+  return std::make_shared<future::Future>(std::move(inputBuffer), future::Op::SEND);
 }
 
-void send_wrapper(const std::shared_ptr<gloo::Context> &context,
+std::shared_ptr<future::Future> isend_wrapper(const std::shared_ptr<gloo::Context> &context,
                   intptr_t sendbuf, size_t size, glooDataType_t datatype,
-                  int peer, uint32_t tag, std::chrono::milliseconds timeout_ms) {
+                  int peer, uint32_t tag) {
   switch (datatype) {
   case glooDataType_t::glooInt8:
-    send<int8_t>(context, sendbuf, size, peer, tag, timeout_ms);
+    return isend<int8_t>(context, sendbuf, size, peer, tag);
     break;
   case glooDataType_t::glooUint8:
-    send<uint8_t>(context, sendbuf, size, peer, tag, timeout_ms);
+    return isend<uint8_t>(context, sendbuf, size, peer, tag);
     break;
   case glooDataType_t::glooInt32:
-    send<int32_t>(context, sendbuf, size, peer, tag, timeout_ms);
+    return isend<int32_t>(context, sendbuf, size, peer, tag);
     break;
   case glooDataType_t::glooUint32:
-    send<uint32_t>(context, sendbuf, size, peer, tag, timeout_ms);
+    return isend<uint32_t>(context, sendbuf, size, peer, tag);
     break;
   case glooDataType_t::glooInt64:
-    send<int64_t>(context, sendbuf, size, peer, tag, timeout_ms);
+    return isend<int64_t>(context, sendbuf, size, peer, tag);
     break;
   case glooDataType_t::glooUint64:
-    send<uint64_t>(context, sendbuf, size, peer, tag, timeout_ms);
+    return isend<uint64_t>(context, sendbuf, size, peer, tag);
     break;
   case glooDataType_t::glooFloat16:
-    send<gloo::float16>(context, sendbuf, size, peer, tag, timeout_ms);
+    return isend<gloo::float16>(context, sendbuf, size, peer, tag);
     break;
   case glooDataType_t::glooFloat32:
-    send<float_t>(context, sendbuf, size, peer, tag, timeout_ms);
+    return isend<float_t>(context, sendbuf, size, peer, tag);
     break;
   case glooDataType_t::glooFloat64:
-    send<double_t>(context, sendbuf, size, peer, tag, timeout_ms);
+    return isend<double_t>(context, sendbuf, size, peer, tag);
     break;
   default:
     throw std::runtime_error("Unhandled dataType");
