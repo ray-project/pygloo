@@ -28,26 +28,6 @@ make(
     static_libraries = ["libhiredis.a"],
 )
 
-# cc_library(
-#     name = "hiredis",
-#     srcs = glob(
-#         [
-#             "*.c",
-#             "*.h",
-#         ],
-#         exclude =
-#         [
-#             "test.c",
-#         ],
-#     ),
-#     hdrs = glob([
-#         "*.h",
-#         "adapters/*.h",
-#     ]),
-#     include_prefix = "hiredis",
-#     visibility = ["//visibility:public"],
-# )
-
 cmake_external(
     name = "gloo",
     # Values to be passed as -Dkey=value on the CMake command line;

@@ -12,6 +12,7 @@ import tarfile
 import tempfile
 import zipfile
 import time
+from pathlib import Path
 
 from itertools import chain
 from itertools import takewhile
@@ -77,6 +78,12 @@ def build():
                    ".".join(map(str, sys.version_info[:2])),
                    ", ".join(".".join(map(str, v)) for v in SUPPORTED_PYTHONS))
         raise RuntimeError(msg)
+
+    # Delete the build file if it already exists. Otherwise, bazel will
+    # use the old shared object built.
+    build_path = Path("build")
+    if build_path.exists():
+        shutil.rmtree(build_path)
 
     bazel_env = dict(os.environ, PYTHON3_BIN_PATH=sys.executable)
     print("SANG-TODO bazel_env", bazel_env)
