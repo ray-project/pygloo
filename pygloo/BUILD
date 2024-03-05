@@ -10,7 +10,7 @@ cmake_external(
     env_vars = {"CFLAGS": "-fPIC"},
     lib_source = "@libuv//:all",
 
-    out_lib_dir = "lib",
+    out_lib_dir = "lib64",
     # We are selecting the resulting static library to be passed in C/C++ provider
     # as the result of the build;
     static_libraries = ["libuv_a.a"],
