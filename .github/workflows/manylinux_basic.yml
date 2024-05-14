@@ -9,7 +9,7 @@ on:
 jobs:
   build-wheels:
     timeout-minutes: 60
-    runs-on: manylinux2014_x86_64
+    runs-on: ubuntu-latest
     container: quay.io/pypa/manylinux2014_x86_64
 
     steps:
