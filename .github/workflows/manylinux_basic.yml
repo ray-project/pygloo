@@ -23,6 +23,7 @@ jobs:
             chmod +x bazel-5.1.0-installer-linux-x86_64.sh
             ./bazel-5.1.0-installer-linux-x86_64.sh --user
             export PATH=$PATH:~/.bazel/bin
+            export PYTHON_BIN_PATH='/opt/python/cp38-cp38/bin/python'
             bazel build //pygloo:all
             echo "Built successfully1."
 
