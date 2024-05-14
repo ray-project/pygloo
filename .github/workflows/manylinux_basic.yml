@@ -23,9 +23,12 @@ jobs:
             chmod +x bazel-5.1.0-installer-linux-x86_64.sh
             ./bazel-5.1.0-installer-linux-x86_64.sh --user
             export PATH=$PATH:~/.bazel/bin
+            bazel build //pygloo:all
+            echo "Built successfully1."
+
     - name: Build wheels
       run: |
-          bazel build //pygloo:all
+          # bazel build //pygloo:all
           echo "Built successfully."
 
     # - name: Archive pygloo-wheel
