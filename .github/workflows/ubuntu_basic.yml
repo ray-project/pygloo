@@ -10,7 +10,7 @@ jobs:
   run-unit-tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    container: docker.io/library/ubuntu:latest
+    container: docker.io/library/ubuntu:20.04
 
     steps:
     - uses: actions/checkout@v2
