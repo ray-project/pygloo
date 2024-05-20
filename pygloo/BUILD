@@ -1,5 +1,6 @@
 load("@rules_foreign_cc//tools/build_defs:cmake.bzl", "cmake_external")
 load("@rules_foreign_cc//tools/build_defs:make.bzl", "make")
+load("@rules_cc//cc:defs.bzl", "cc_library")
 load("@pybind11_bazel//:build_defs.bzl", "pybind_library")
 load("@pybind11_bazel//:build_defs.bzl", "pybind_extension")
 
@@ -32,6 +33,26 @@ make(
     # as the result of the build;
     static_libraries = ["libhiredis.a"],
 )
+
+# cc_library(
+#     name = "hiredis",
+#     srcs = glob(
+#         [
+#             "*.c",
+#             "*.h",
+#         ],
+#         exclude =
+#         [
+#             "test.c",
+#         ],
+#     ),
+#     hdrs = glob([
+#         "*.h",
+#         "adapters/*.h",
+#     ]),
+#     include_prefix = "hiredis",
+#     visibility = ["//visibility:public"],
+# )
 
 cmake_external(
     name = "gloo",
