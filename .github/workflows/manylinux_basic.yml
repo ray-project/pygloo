@@ -26,6 +26,7 @@ jobs:
             export PYTHON_BIN_PATH='/opt/python/cp38-cp38/bin/python'
             bash build_wheels.sh
             echo "Built successfully."
+            echo `pwd`
 
     - name: Archive pygloo-wheels
       uses: actions/upload-artifact@v1
