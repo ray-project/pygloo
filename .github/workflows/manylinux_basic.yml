@@ -31,4 +31,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: pygloo_python3X_wheels_on_manylinux
-        path: dist/
+        path: dist/*
