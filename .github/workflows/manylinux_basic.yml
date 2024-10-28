@@ -10,12 +10,11 @@ jobs:
   build-wheels:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    container: quay.io/pypa/manylinux2014_x86_64
+    container: quay.io/pypa/manylinux2014_x86_64:2024-07-02-9ac04ee
 
     steps:
     - uses: actions/checkout@v2
-
-    - name: Install bazel
+    - name: Build Wheels
       run:  |
             yum -y install wget
             yum -y install java-1.8.0-openjdk java-1.8.0-openjdk-devel
@@ -24,16 +23,12 @@ jobs:
             ./bazel-5.1.0-installer-linux-x86_64.sh --user
             export PATH=$PATH:~/.bazel/bin
             export PYTHON_BIN_PATH='/opt/python/cp38-cp38/bin/python'
-            bazel build //pygloo:all
-            echo "Built successfully1."
+            bash build_wheels.sh
+            echo "Built successfully."
+            echo `pwd`
 
-    - name: Build wheels
-      run: |
-          # bazel build //pygloo:all
-          echo "Built successfully."
-
-    # - name: Archive pygloo-wheel
-    #   uses: actions/upload-artifact@v1
-    #   with:
-    #     name: pygloo_python39_wheel_on_manylinux
-    #     path: dist/
+    - name: Archive pygloo-wheels
+      uses: actions/upload-artifact@v4
+      with:
+        name: pygloo_python3X_wheels_on_manylinux
+        path: dist/*
