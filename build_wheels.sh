@@ -2,20 +2,21 @@
 
 # Assuming in docker "quay.io/pypa/manylinux2014_x86_64".
 
-# Build py36 manylinux wheels
-PYTHON_BIN_PATH='/opt/python/cp36-cp36m/bin/python' /opt/python/cp36-cp36m/bin/python setup.py bdist_wheel
-auditwheel repair --plat manylinux2014_x86_64 dist/pygloo-0.2.0-cp36-cp36m-linux_x86_64.whl
-bazel clean --expunge
-/opt/python/cp36-cp36m/bin/python setup.py clean --all
+PYGLOO_VERSION="0.2.1"
+# 定义 Python 版本数组
+PYTHON_VERSIONS=("cp38-cp38" "cp39-cp39" "cp310-cp310" "cp311-cp311" "cp312-cp312")
 
-# Build py37 manylinux wheels
-PYTHON_BIN_PATH='/opt/python/cp37-cp37m/bin/python' /opt/python/cp37-cp37m/bin/python setup.py bdist_wheel
-auditwheel repair --plat manylinux2014_x86_64 dist/pygloo-0.2.0-cp37-cp37m-linux_x86_64.whl
-bazel clean --expunge
-/opt/python/cp37-cp37m/bin/python setup.py clean --all
-
-# Build py38 manylinux wheels
-PYTHON_BIN_PATH='/opt/python/cp38-cp38/bin/python' /opt/python/cp38-cp38/bin/python setup.py bdist_wheel
-auditwheel repair --plat manylinux2014_x86_64 dist/pygloo-0.2.0-cp38-cp38-linux_x86_64.whl
-bazel clean --expunge
-/opt/python/cp38-cp38/bin/python setup.py clean --all
+# 遍历每个版本
+for VERSION in "${PYTHON_VERSIONS[@]}"; do
+    # 设置 Python 路径
+    PYTHON_BIN_PATH="/opt/python/${VERSION}/bin/python"
+    
+    export PYTHON_BIN_PATH=$PYTHON_BIN_PATH 
+    # 执行构建和修复
+    $PYTHON_BIN_PATH setup.py bdist_wheel
+    auditwheel repair --plat manylinux2014_x86_64 "dist/pygloo-${PYGLOO_VERSION}-${VERSION}-linux_x86_64.whl"
+    
+    # 清理构建环境
+    bazel clean --expunge
+    $PYTHON_BIN_PATH setup.py clean --all
+done
