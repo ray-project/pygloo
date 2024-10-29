@@ -10,7 +10,7 @@ jobs:
   build-wheels:
     timeout-minutes: 60
     runs-on: ubuntu-20.04
-    container: quay.io/pypa/manylinux2014_x86_64:2024-07-02-9ac04ee
+    container: quay.io/pypa/manylinux_2_28_x86_64
 
     steps:
     - uses: actions/checkout@v2
