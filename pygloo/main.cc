@@ -8,11 +8,20 @@
 #include <collective.h>
 #include <rendezvous.h>
 #include <sstream>
+#include <chrono>
 
 namespace pygloo {
 bool transport_tcp_available() { return GLOO_HAVE_TRANSPORT_TCP; }
 
 bool transport_uv_available() { return GLOO_HAVE_TRANSPORT_UV; }
+
+void setTimeout_wrapper(gloo::Context* context, int timeout_ms) {
+    context->setTimeout(std::chrono::milliseconds(timeout_ms));
+}
+
+int64_t getTimeout_wrapper(gloo::Context* context) {
+    return context->getTimeout().count();
+}
 } // namespace pygloo
 
 PYBIND11_MODULE(pygloo, m) {
@@ -124,8 +133,8 @@ PYBIND11_MODULE(pygloo, m) {
       .def("createUnboundBuffer", &gloo::Context::createUnboundBuffer)
       .def("nextSlot", &gloo::Context::nextSlot)
       .def("closeConnections", &gloo::Context::closeConnections)
-      .def("setTimeout", &gloo::Context::setTimeout)
-      .def("getTimeout", &gloo::Context::getTimeout);
+      .def("setTimeout", &pygloo::setTimeout_wrapper)
+      .def("getTimeout", &pygloo::getTimeout_wrapper);
 
   pygloo::transport::def_transport_module(m);
   pygloo::rendezvous::def_rendezvous_module(m);
