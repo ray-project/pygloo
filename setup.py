@@ -22,7 +22,7 @@ import urllib.request
 
 logger = logging.getLogger(__name__)
 
-SUPPORTED_PYTHONS = [(3, 6), (3, 7), (3, 8), (3, 9), (3, 10)]
+SUPPORTED_PYTHONS = [(3, 8), (3, 9), (3, 10), (3, 11), (3, 12)]
 SUPPORTED_BAZEL = (3, 2, 0)
 
 ROOT_DIR = os.path.dirname(__file__)
@@ -93,7 +93,7 @@ def build():
     bazel_targets = ["//pygloo:all"]
     return bazel_invoke(
         subprocess.check_call,
-        ["build", "--verbose_failures", "--"] + bazel_targets,
+        ["build", "--verbose_failures", "-j", "4", "--"] + bazel_targets,
         env=bazel_env)
 
 
@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
     setuptools.setup(
         name="pygloo",
-        version="0.2.0",
+        version="0.2.1",
         author="Ray Team",
         author_email="ray-dev@googlegroups.com",
         description=("A python binding for gloo"),
