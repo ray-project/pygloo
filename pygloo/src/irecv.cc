@@ -4,8 +4,8 @@
 namespace pygloo {
 
 template <typename T>
-void recv(const std::shared_ptr<gloo::Context> &context, intptr_t recvbuf,
-          size_t size, int peer, uint32_t tag, std::chrono::milliseconds timeout_ms) {
+std::shared_ptr<future::Future> irecv(const std::shared_ptr<gloo::Context> &context, intptr_t recvbuf,
+          size_t size, int peer, uint32_t tag) {
   if (context->rank == peer)
     throw std::runtime_error(
         "peer equals to current rank. Please specify other peer values.");
@@ -17,43 +17,39 @@ void recv(const std::shared_ptr<gloo::Context> &context, intptr_t recvbuf,
   gloo::Slot slot = gloo::Slot::build(kSendRecvSlotPrefix, tag);
 
   outputBuffer->recv(peer, slot);
-  if (timeout_ms == std::chrono::milliseconds(0)) {
-    timeout_ms = context->getTimeout();
-  }
-  outputBuffer->waitRecv(timeout_ms);
+  return std::make_shared<future::Future>(std::move(outputBuffer), future::Op::RECV);
 }
 
-void recv_wrapper(const std::shared_ptr<gloo::Context> &context,
+std::shared_ptr<future::Future> irecv_wrapper(const std::shared_ptr<gloo::Context> &context,
                   intptr_t recvbuf, size_t size, glooDataType_t datatype,
-                  int peer, uint32_t tag,
-                  std::chrono::milliseconds timeout_ms) {
+                  int peer, uint32_t tag) {
   switch (datatype) {
   case glooDataType_t::glooInt8:
-    recv<int8_t>(context, recvbuf, size, peer, tag, timeout_ms);
+    return irecv<int8_t>(context, recvbuf, size, peer, tag);
     break;
   case glooDataType_t::glooUint8:
-    recv<uint8_t>(context, recvbuf, size, peer, tag, timeout_ms);
+    return irecv<uint8_t>(context, recvbuf, size, peer, tag);
     break;
   case glooDataType_t::glooInt32:
-    recv<int32_t>(context, recvbuf, size, peer, tag, timeout_ms);
+    return irecv<int32_t>(context, recvbuf, size, peer, tag);
     break;
   case glooDataType_t::glooUint32:
-    recv<uint32_t>(context, recvbuf, size, peer, tag, timeout_ms);
+    return irecv<uint32_t>(context, recvbuf, size, peer, tag);
     break;
   case glooDataType_t::glooInt64:
-    recv<int64_t>(context, recvbuf, size, peer, tag, timeout_ms);
+    return irecv<int64_t>(context, recvbuf, size, peer, tag);
     break;
   case glooDataType_t::glooUint64:
-    recv<uint64_t>(context, recvbuf, size, peer, tag, timeout_ms);
+    return irecv<uint64_t>(context, recvbuf, size, peer, tag);
     break;
   case glooDataType_t::glooFloat16:
-    recv<gloo::float16>(context, recvbuf, size, peer, tag, timeout_ms);
+    return irecv<gloo::float16>(context, recvbuf, size, peer, tag);
     break;
   case glooDataType_t::glooFloat32:
-    recv<float_t>(context, recvbuf, size, peer, tag, timeout_ms);
+    return irecv<float_t>(context, recvbuf, size, peer, tag);
     break;
   case glooDataType_t::glooFloat64:
-    recv<double_t>(context, recvbuf, size, peer, tag, timeout_ms);
+    return irecv<double_t>(context, recvbuf, size, peer, tag);
     break;
   default:
     throw std::runtime_error("Unhandled dataType");
