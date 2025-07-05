@@ -7,9 +7,8 @@ all_content = """filegroup(name = "all", srcs = glob(["**"]), visibility = ["//v
 
 http_archive(
     name = "rules_python",
-   #  sha256 = "7b9039c31e909cf59eeaea8ccbdc54f09f7ebaeb9609b94371c7de45e802977c",
-    strip_prefix = "rules_python-1.5.0",
-    url = "https://github.com/bazel-contrib/rules_python/releases/download/1.5.0/rules_python-1.5.0.tar.gz",
+    strip_prefix = "rules_python-0.30.0",
+    url = "https://wq-boost.oss-cn-beijing.aliyuncs.com/rules_python-0.30.0.tar.gz",
 )
 # if missing it will trig the error message of the OP
 load("@rules_python//python:repositories.bzl", "py_repositories", "python_register_toolchains")
@@ -18,6 +17,7 @@ py_repositories()
 python_register_toolchains(
     name = "python_3_11",
     python_version = "3.11",
+    ignore_root_user_error = True,
 )
 
 # Rule repository
