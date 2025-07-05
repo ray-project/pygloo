@@ -31,7 +31,7 @@ jobs:
             . py3/bin/activate
             which python
             pip install pytest torch
-            pip install ray==1.13.0
+            pip install ray
 
     - name: Build and test
       run: |
