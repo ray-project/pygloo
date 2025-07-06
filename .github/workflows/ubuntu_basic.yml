@@ -10,7 +10,7 @@ jobs:
   run-unit-tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    container: docker.io/library/ubuntu:24.04
+    container: docker.io/library/ubuntu:22.04
 
     steps:
     - uses: actions/checkout@v2
@@ -30,11 +30,13 @@ jobs:
             python3 -m virtualenv -p python3.11 py3
             . py3/bin/activate
             which python
+            python --version
             pip install pytest torch
             pip install ray
 
     - name: Build and test
       run: |
            . py3/bin/activate
+           python --version
            python3 setup.py install
            cd tests && python3 -m pytest *
