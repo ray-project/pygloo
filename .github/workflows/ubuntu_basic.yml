@@ -18,6 +18,7 @@ jobs:
     - name: Install bazel
       run:  |
             apt-get update
+            add-apt-repository ppa:deadsnakes/ppa
             apt-get install -yq wget gcc g++ python3.11 zlib1g-dev zip libuv1.dev
 
             apt-get install -yq pip
