@@ -73,7 +73,7 @@ git_repository(
     commit = "c37d821",
     # We inject a BUILD.bazel file to tell Bazel how to build this CMake project.
     build_file_content = """
-load("@rules_foreign_cc//foreign_cc:defs.bzl", "cc_cmake")
+load("@rules_foreign_cc//:foreign_cc/defs.bzl", "cc_cmake")
 
 # Define a filegroup to capture all source files.
 filegroup(
