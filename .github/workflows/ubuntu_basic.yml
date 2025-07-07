@@ -2,24 +2,37 @@ name: ubuntu-basic
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - fix-build-onpy11
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+      - fix-build-onpy11
 
 jobs:
   run-unit-tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    container: docker.io/library/ubuntu:22.04
+    container: docker.io/library/ubuntu:latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
 
     - name: Install bazel
       run:  |
             export DEBIAN_FRONTEND=noninteractive
             apt-get update
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get install -y software-properties-common
             add-apt-repository ppa:deadsnakes/ppa
+            apt-get install -y git cmake
             apt-get install -yq wget gcc g++ python3.11 zlib1g-dev zip libuv1.dev
 
             apt-get install -yq pip
