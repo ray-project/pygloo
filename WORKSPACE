@@ -5,6 +5,21 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 # Group the sources of the library so that CMake rule have access to it
 all_content = """filegroup(name = "all", srcs = glob(["**"]), visibility = ["//visibility:public"])"""
 
+http_archive(
+    name = "rules_python",
+    strip_prefix = "rules_python-0.30.0",
+    url = "https://wq-boost.oss-cn-beijing.aliyuncs.com/rules_python-0.30.0.tar.gz",
+)
+# if missing it will trig the error message of the OP
+load("@rules_python//python:repositories.bzl", "py_repositories", "python_register_toolchains")
+py_repositories()
+
+python_register_toolchains(
+    name = "python_3_11",
+    python_version = "3.11",
+    ignore_root_user_error = True,
+)
+
 # Rule repository
 http_archive(
    name = "rules_foreign_cc",
@@ -42,18 +57,19 @@ http_archive(
 
 http_archive(
    name = "pybind11_bazel",
-   strip_prefix = "pybind11_bazel-f4f1bd4fa4b368b79dd6f003f8ef8c5a91fad36b",
-   urls = ["https://github.com/Ezra-H/pybind11_bazel/archive/f4f1bd4fa4b368b79dd6f003f8ef8c5a91fad36b.zip"],
-   sha256 = "6ea811e7a7348f7c9d5b59887aa0c65e42222e199049a1ee55db147d2e9ca4a7",
+   strip_prefix = "pybind11_bazel-2.13.6",
+   urls = ["https://github.com/pybind/pybind11_bazel/releases/download/v2.13.6/pybind11_bazel-2.13.6.zip"],
+   sha256 = "9df284330336958c837fb70dc34c0a6254dac52a5c983b3373a8c2bbb79ac35e",
 )
 
 # We still require the pybind library.
 http_archive(
    name = "pybind11",
-   build_file = "@pybind11_bazel//:pybind11.BUILD",
-   strip_prefix = "pybind11-2.6.1",
-   urls = ["https://github.com/pybind/pybind11/archive/v2.6.1.tar.gz"],
-   sha256 = "cdbe326d357f18b83d10322ba202d69f11b2f49e2d87ade0dc2be0c5c34f8e2a",
+   build_file = "@pybind11_bazel//:pybind11-BUILD.bazel",
+   strip_prefix = "pybind11-2.13.6",
+   # urls = ["https://github.com/pybind/pybind11/archive/v2.13.6.zip"],
+   urls = ["https://wq-boost.oss-cn-beijing.aliyuncs.com/pybind11-2.13.6.zip"],
+   # sha256 = "cdbe326d357f18b83d10322ba202d69f11b2f49e2d87ade0dc2be0c5c34f8e2a",
 )
 
 http_archive(
@@ -81,7 +97,7 @@ http_archive(
    sha256 = "a146136bb6efdac0e3ede952d09aec44b771a87ebc713bd815c3a90a7428c908",
 )
 
-load("@pybind11_bazel//:python_configure.bzl", "python_configure_pybind")
-python_configure_pybind(name = "local_config_python")
+# load("@pybind11_bazel//:python_configure.bzl", "python_configure_pybind")
+# python_configure_pybind(name = "local_config_python")
 
 

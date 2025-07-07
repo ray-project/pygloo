@@ -22,8 +22,8 @@ import urllib.request
 
 logger = logging.getLogger(__name__)
 
-SUPPORTED_PYTHONS = [(3, 6), (3, 7), (3, 8), (3, 9), (3, 10)]
-SUPPORTED_BAZEL = (3, 2, 0)
+SUPPORTED_PYTHONS = [(3, 11), (3, 11), (3, 13)]
+SUPPORTED_BAZEL = (6, 5, 0)
 
 ROOT_DIR = os.path.dirname(__file__)
 
@@ -130,10 +130,10 @@ if __name__ == "__main__":
 
     setuptools.setup(
         name="pygloo",
-        version="0.2.0",
+        version="0.2.2.dev0",
         author="Ray Team",
         author_email="ray-dev@googlegroups.com",
-        description=("A python binding for gloo"),
+        description=("A python binding for gloo."),
         long_description=long_description,
         long_description_content_type="text/markdown",
         url="https://github.com/ray-project/pygloo",

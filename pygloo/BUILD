@@ -2,6 +2,8 @@ load("@rules_foreign_cc//tools/build_defs:cmake.bzl", "cmake_external")
 load("@rules_foreign_cc//tools/build_defs:make.bzl", "make")
 load("@pybind11_bazel//:build_defs.bzl", "pybind_library")
 load("@pybind11_bazel//:build_defs.bzl", "pybind_extension")
+load("@rules_python//python:defs.bzl", "py_library")
+
 
 cmake_external(
     name = "libuv",
@@ -72,7 +74,7 @@ pybind_library(
     hdrs = glob(["include/*.h"]),
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
-    deps = [":gloo"]
+    deps = [":gloo", "@rules_python//python/cc:current_py_cc_libs"]
 )
 
 pybind_extension(
