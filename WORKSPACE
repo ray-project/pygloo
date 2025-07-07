@@ -70,7 +70,7 @@ http_archive(
 git_repository(
     name = "gloo",
     remote = "https://github.com/pytorch/gloo.git",
-    tag = "v0.30.4",
+    commit = "c37d821",
     # We inject a BUILD.bazel file to tell Bazel how to build this CMake project.
     build_file_content = """
 load("@rules_foreign_cc//:defs.bzl", "cc_cmake")
