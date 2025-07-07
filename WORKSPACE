@@ -46,7 +46,7 @@ http_archive(
 http_archive(
     name = "pybind11",
     build_file = "@pybind11_bazel//:pybind11-BUILD.bazel",
-    sha256 = "cdbe326d357f18b83d10322ba202d69f11b2f49e2d87ade0dc2be0c5c34f8e2a",
+    sha256 = "d0a116e91f64a4a2d8fb7590c34242df92258a61ec644b79127951e821b47be6",
     strip_prefix = "pybind11-2.13.6",
     urls = ["https://github.com/pybind/pybind11/archive/refs/tags/v2.13.6.zip"],
 )
