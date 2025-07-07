@@ -14,7 +14,7 @@ jobs:
   run-unit-tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    container: docker.io/library/ubuntu:22.04
+    container: docker.io/library/ubuntu:latest
 
     steps:
     - name: Checkout code
