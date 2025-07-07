@@ -1,11 +1,9 @@
 workspace(name = "pygloo")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
-# Group the sources of the library so that CMake rule have access to it
-all_content = """filegroup(name = "all", srcs = glob(["**"]), visibility = ["//visibility:public"])"""
-
-# Corrected: Using official GitHub release URL
+# --- Python Rules ---
 http_archive(
     name = "rules_python",
     sha256 = "3b8b4cdc991bc9def8833d118e4c850f1b7498b3d65d5698eea92c3528b8cf2c",
@@ -22,7 +20,7 @@ python_register_toolchains(
     ignore_root_user_error = True,
 )
 
-# Correct: This is the only, correct definition of rules_foreign_cc
+# --- Foreign CC Rules (for CMake/Make) ---
 http_archive(
    name = "rules_foreign_cc",
    strip_prefix = "rules_foreign_cc-87df6b25f6c009883da87f07ea680d38780a4d6f",
@@ -33,8 +31,7 @@ http_archive(
 load("@rules_foreign_cc//:workspace_definitions.bzl", "rules_foreign_cc_dependencies")
 rules_foreign_cc_dependencies()
 
-# REMOVED the second, incorrect definition of rules_foreign_cc that pointed to opencensus-proto.
-
+# --- Pybind11 ---
 http_archive(
    name = "pybind11_bazel",
    strip_prefix = "pybind11_bazel-2.13.6",
@@ -42,7 +39,6 @@ http_archive(
    sha256 = "9df284330336958c837fb70dc34c0a6254dac52a5c983b3373a8c2bbb79ac35e",
 )
 
-# Corrected: Using official GitHub URL and uncommented sha256
 http_archive(
     name = "pybind11",
     build_file = "@pybind11_bazel//:pybind11-BUILD.bazel",
@@ -50,6 +46,9 @@ http_archive(
     strip_prefix = "pybind11-2.13.6",
     urls = ["https://github.com/pybind/pybind11/archive/refs/tags/v2.13.6.zip"],
 )
+
+# --- Other C++ Dependencies (using the old `all_content` method as they are not CMake projects) ---
+all_content = """filegroup(name = "all", srcs = glob(["**"]), visibility = ["//visibility:public"])"""
 
 http_archive(
    name = "libuv",
@@ -67,11 +66,39 @@ http_archive(
    sha256 = "2a0b5fe5119ec973a0c1966bfc4bd7ed39dbce1cb6d749064af9121fe971936f",
 )
 
-# Corrected: Using up-to-date official gloo repository
-http_archive(
+# --- Gloo Dependency (Corrected Method) ---
+git_repository(
     name = "gloo",
-    build_file_content = all_content,
-    strip_prefix = "gloo-0.30.4",
-    urls = ["https://github.com/facebookincubator/gloo/archive/refs/tags/v0.30.4.tar.gz"],
-    sha256 = "2317c2f1505553e144a82a0b784df17d7e3fb6334a170562d475c820f4c0b432",
+    remote = "https://github.com/pytorch/gloo.git",
+    tag = "v0.30.4",
+    # We inject a BUILD.bazel file to tell Bazel how to build this CMake project.
+    build_file_content = """
+load("@rules_foreign_cc//:defs.bzl", "cc_cmake")
+
+# Define a filegroup to capture all source files.
+filegroup(
+    name = "all_srcs",
+    srcs = glob(["**"]),
+    visibility = ["//visibility:public"],
+)
+
+# Define the rule to build the external CMake project.
+cc_cmake(
+    name = "gloo_lib",
+    lib_source = ":all_srcs",
+    out_static_libs = ["libgloo.a"],
+    options = [
+        "-DBUILD_TEST=OFF",
+        "-DBUILD_BENCHMARK=OFF",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# Create an alias so that other targets can depend on @gloo//:all as before.
+alias(
+    name = "all",
+    actual = ":gloo_lib",
+    visibility = ["//visibility:public"],
+)
+""",
 )
